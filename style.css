@@ -1,0 +1,48 @@
+
+* {
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+    flex: 50%;
+    margin: 0 3% 0 0;
+}
+
+
+pre {
+    background-color: rgb(64, 64, 64);
+    color: white;
+    font-family: "Consolas";
+}
+
+
+
+h1 {
+    color: darkblue;
+}
+
+
+h2 {
+    width: fit-content;
+    padding-top: 50px;
+    padding-bottom: 5px;
+    border-bottom: solid 2px lightgray;
+}
+
+code {
+    background-color: whitesmoke;
+
+}
+
+:not(pre):not(.hljs) > code {
+	background-color: whitesmoke;
+    color: crimson; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+    padding: 0 5px 0 5px;
+    border-radius: 3px;
+}
