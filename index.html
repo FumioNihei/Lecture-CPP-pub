@@ -445,7 +445,7 @@ code {
 </div></code></pre>
 <h2 id="%E3%82%BB%E3%83%9F%E3%82%B3%E3%83%AD%E3%83%B3--%E3%81%A8%E3%82%B3%E3%83%AD%E3%83%B3">セミコロン <code>;</code> とコロン <code>:</code></h2>
 <p>c++では，処理の区切りのタイミングで，セミコロン <code>;</code> を使用する．<a href="#c%E3%81%AE%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%82%B9%E3%83%9A%E3%83%BC%E3%82%B9%E3%81%AE%E6%89%B1%E3%81%84">c++でのホワイトスペースの扱い</a>で示したように，c++ではかなり自由に空白や改行を挿入することができるため，セミコロン <code>;</code> を一つの区切りとしている．</p>
-<p>pythonでは，改行で処理が区切られる（ <code>()</code>を使えば，改行を挟んでも処理を継続できるが，それは例外 ）．そのため， <code>;</code> で処理を区切るc++は，根本的に違うものだと理解しておく必要がある．</p>
+<p>pythonでは，改行で処理が区切られる（ <code>()</code>を使えば，改行を挟んでも処理を継続できるが，それは例外 ）．そのため， <code>;</code> で処理を区切るc++は，pythonとは根本的に違うものだと理解しておく必要がある．</p>
 <p>また，（当然だが）pythonにおける <code>:</code> と，c++における <code>;</code> は，役割が全く異なるため，同じように使ってはいけない．例えば以下のコード．</p>
 <div class="row"><div class="column">
 <h3 id="python">python</h3>
@@ -550,6 +550,21 @@ $ ./sample.out
 Input three integers: 30 50 10
 30 50 10         # ここが冗長かつ不要なポイント
 </pre>
+<h2 id="else">else</h2>
+<p>ifとelse ifは条件を持つが，elseは条件を持たない．elseに対して条件を持たせようとすると，その後に続く式の構文に誤りが生じ，シンタックスエラーによりコンパイルができなくなることが一般的なため，実装していればelseに条件を持たせることは，おおむね回避できる．</p>
+<p>しかし，いくつかの不幸が重なると，シンタックスエラーが生じず，コンパイルが通ってしまうことがある．以下のコード参照．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">int</span> x {<span class="hljs-number">0</span>};
+    
+    <span class="hljs-keyword">if</span> ( x == <span class="hljs-number">0</span> )
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"x is zero."</span>;
+    <span class="hljs-keyword">else</span> ( x != <span class="hljs-number">0</span> );
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"x is not zero."</span>;
+}
+</div></code></pre>
+<p>まるでelseが条件を持っているように見えてしまう．しかし正しい解釈は，<strong>elseに落ちたときに，式 <code>( x != 0 )</code> を実行する</strong>，である．インデントで混乱させられるが，<code>std::cout &lt;&lt; &quot;x is not zero.&quot;;</code>はif else文に関係なく，必ず実行される．つまり，<code>x == 0</code>のときの出力は，<code>x is zero.x is not zero.</code>である．</p>
 
 </body>
 </html>
