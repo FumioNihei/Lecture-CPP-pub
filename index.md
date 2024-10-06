@@ -2,9 +2,135 @@
 <link rel="stylesheet" href="style.css">
 
 
-# 実験でありがちミス集
+# 実験で見つけたもろもろ
 
+- [第3回 2024/09/27](#第3回)
 - [第2回 2024/09/27](#第2回)
+
+# 第3回
+
+## デバッグのテクニック
+
+デバッグ（プログラムのバグをなくす作業．）においてやるべきは，**エラー箇所の特定**と，**エラー内容の特定**，の二点であることがほとんど．特に長いソースコードを書くと，この二点の特定が難しくなる．
+
+なんか長いコード（以下の例）を作るときには，まずはエラー箇所を特定するために，プログラムのほとんどをコメントアウトしコンパイル，その後コメントアウトの範囲を狭めてコンパイル，を繰り返すとよい．以下の例参照．
+
+
+<div class="row"><div class="column">
+
+一回目は，まず以下のように，ほとんどをコメントアウトしてコンパイル．
+
+```cpp
+#include <iostream>
+#include <string> 
+
+int main() {
+  std::string s {"Hello!"};
+  std::cout << s <<"\n";
+
+  /*
+  s = "How are you?";
+  std::string s2 {s};
+  std::string s3;
+  s3 = s2;
+  std::cout << s3 <<"\n";
+
+  std::cin >> s2;
+  s3 = s2 + "! ";
+  s3 = s3 + s3;
+  std::cout << s3 <<"\n";
+
+  s2 += ", thank you,";
+  s3 = " and You";
+  s2 += s3;
+  s2 += '?';
+  std::cout << s2 <<"\n";
+  */
+  return 0;
+}
+```
+
+
+</div><div class="column">
+
+続けて二回目は，以下のように，コメントアウトの範囲を狭めてコンパイル．
+
+```cpp
+#include <iostream>
+#include <string> 
+
+int main() {
+  std::string s {"Hello!"};
+  std::cout << s <<"\n";
+
+  s = "How are you?";
+  std::string s2 {s};
+  std::string s3;
+  s3 = s2;
+  std::cout << s3 <<"\n";
+
+  /* 
+  std::cin >> s2;
+  s3 = s2 + "! ";
+  s3 = s3 + s3;
+  std::cout << s3 <<"\n";
+
+  s2 += ", thank you,";
+  s3 = " and You";
+  s2 += s3;
+  s2 += '?';
+  std::cout << s2 <<"\n";
+  */
+  return 0;
+}
+```
+
+</div></div>
+
+c++では，`/* */` で囲まれた範囲は，一括でコメントアウトできる．複数行を一括でコメントアウトしたいときに便利．
+
+また，ソースコードを全て作成してからコンパイルするのではなく，**少しずつ書き進めながら逐次コンパイルするほうが，慣れないうちは効率がよい**ことがほとんど．
+
+## コンパイラのエラーの読み方
+
+以下のようなコンパイラのエラーや，もっと長いものに遭遇した人もいるはず．
+
+<pre>
+$ g++ -std=c++17 student.cpp
+student.cpp: In function ‘int main()’:
+student.cpp:6:5: error: ‘string’ was not declared in this scope
+    6 |     string s {"hello"};
+      |     ^~~~~~
+student.cpp:6:5: note: suggested alternatives:
+In file included from /usr/include/c++/11/iosfwd:39,
+                 from /usr/include/c++/11/ios:38,
+                 from /usr/include/c++/11/ostream:38,
+                 from /usr/include/c++/11/iostream:39,
+                 from student.cpp:1:
+/usr/include/c++/11/bits/stringfwd.h:79:33: note:   ‘std::string’
+   79 |   typedef basic_string<char>    string;
+      |                                 ^~~~~~
+In file included from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/ostream:38,
+                 from /usr/include/c++/11/iostream:39,
+                 from student.cpp:1:
+/usr/include/c++/11/string:67:11: note:   ‘std::pmr::string’
+   67 |     using string    = basic_string<char>;
+      |           ^~~~~~
+</pre>
+
+コンパイラのエラーは，たいていわかりにくい．そのため，プログラムが書ける人も，コンパイラのエラーを読むのは渋々，という人が多い．渋々読まなければならない時には，コンパイラのエラーを全て理解しようとするのではなく，一番最初のエラーだけ確認すれば，まずはOK．この例における一番最初のエラーとは，以下の箇所である．
+
+<pre>
+student.cpp: In function ‘int main()’:
+student.cpp:6:5: error: ‘string’ was not declared in this scope
+    6 |     string s {"hello"};
+      |     ^~~~~~
+</pre>
+
+この例では，メイン関数の中において `In function ‘int main()’`，6行目の5文字目 `6:5` にエラーがあることを示している．具体的なエラーは `‘string’ was not declared in this scope` と書かれているが，この辺りは参考程度にしたうえで，自身が書いたソースコードを見直していくとよい．**コンパイラはあくまで構文のエラーを示すだけであって，どう直せば動く，とは教えてくれない**ことに注意．
 
 # 第2回
 
@@ -153,11 +279,14 @@ int main() {
 
     // 良くありがちなミス
     // std::cin << x << y << z;
-    // std::cin >> x, y, z;    
+    // std::cin >> x, y, z;
+    // std::cin >> x >> y >> x >> "\n";
 }
 ```
 
 `std::cin`に続く演算子の向き `>>` と，変数ごとに `>>` で区切ることに注意．
+
+また，`cin` での入力後に．画面に改行を表示したい場合は，`cin >> \n;` とするのではなく，`cin` の次の行で，`cout << "\n";` とする必要がある．
 
 ## 作成したプログラムに，複数個の値をキーボード入力するときのやり方
 

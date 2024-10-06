@@ -362,10 +362,113 @@ code {
     });
   </script>
 <link rel="stylesheet" href="style.css">
-<h1 id="%E5%AE%9F%E9%A8%93%E3%81%A7%E3%81%82%E3%82%8A%E3%81%8C%E3%81%A1%E3%83%9F%E3%82%B9%E9%9B%86">実験でありがちミス集</h1>
+<h1 id="%E5%AE%9F%E9%A8%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%81%9F%E3%82%82%E3%82%8D%E3%82%82%E3%82%8D">実験で見つけたもろもろ</h1>
 <ul>
+<li><a href="#%E7%AC%AC3%E5%9B%9E">第3回 2024/09/27</a></li>
 <li><a href="#%E7%AC%AC2%E5%9B%9E">第2回 2024/09/27</a></li>
 </ul>
+<h1 id="%E7%AC%AC3%E5%9B%9E">第3回</h1>
+<h2 id="%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E3%81%AE%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF">デバッグのテクニック</h2>
+<p>デバッグ（プログラムのバグをなくす作業．）においてやるべきは，<strong>エラー箇所の特定</strong>と，<strong>エラー内容の特定</strong>，の二点であることがほとんど．特に長いソースコードを書くと，この二点の特定が難しくなる．</p>
+<p>なんか長いコード（以下の例）を作るときには，まずはエラー箇所を特定するために，プログラムのほとんどをコメントアウトしコンパイル，その後コメントアウトの範囲を狭めてコンパイル，を繰り返すとよい．以下の例参照．</p>
+<div class="row"><div class="column">
+<p>一回目は，まず以下のように，ほとんどをコメントアウトしてコンパイル．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt; </span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s {<span class="hljs-string">"Hello!"</span>};
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; s &lt;&lt;<span class="hljs-string">"\n"</span>;
+
+  <span class="hljs-comment">/*
+  s = "How are you?";
+  std::string s2 {s};
+  std::string s3;
+  s3 = s2;
+  std::cout &lt;&lt; s3 &lt;&lt;"\n";
+
+  std::cin &gt;&gt; s2;
+  s3 = s2 + "! ";
+  s3 = s3 + s3;
+  std::cout &lt;&lt; s3 &lt;&lt;"\n";
+
+  s2 += ", thank you,";
+  s3 = " and You";
+  s2 += s3;
+  s2 += '?';
+  std::cout &lt;&lt; s2 &lt;&lt;"\n";
+  */</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div><div class="column">
+<p>続けて二回目は，以下のように，コメントアウトの範囲を狭めてコンパイル．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt; </span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s {<span class="hljs-string">"Hello!"</span>};
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; s &lt;&lt;<span class="hljs-string">"\n"</span>;
+
+  s = <span class="hljs-string">"How are you?"</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s2 {s};
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s3;
+  s3 = s2;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; s3 &lt;&lt;<span class="hljs-string">"\n"</span>;
+
+  <span class="hljs-comment">/* 
+  std::cin &gt;&gt; s2;
+  s3 = s2 + "! ";
+  s3 = s3 + s3;
+  std::cout &lt;&lt; s3 &lt;&lt;"\n";
+
+  s2 += ", thank you,";
+  s3 = " and You";
+  s2 += s3;
+  s2 += '?';
+  std::cout &lt;&lt; s2 &lt;&lt;"\n";
+  */</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div></div>
+<p>c++では，<code>/* */</code> で囲まれた範囲は，一括でコメントアウトできる．複数行を一括でコメントアウトしたいときに便利．</p>
+<p>また，ソースコードを全て作成してからコンパイルするのではなく，<strong>少しずつ書き進めながら逐次コンパイルするほうが，慣れないうちは効率がよい</strong>ことがほとんど．</p>
+<h2 id="%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%81%AE%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%AE%E8%AA%AD%E3%81%BF%E6%96%B9">コンパイラのエラーの読み方</h2>
+<p>以下のようなコンパイラのエラーや，もっと長いものに遭遇した人もいるはず．</p>
+<pre>
+$ g++ -std=c++17 student.cpp
+student.cpp: In function ‘int main()’:
+student.cpp:6:5: error: ‘string’ was not declared in this scope
+    6 |     string s {"hello"};
+      |     ^~~~~~
+student.cpp:6:5: note: suggested alternatives:
+In file included from /usr/include/c++/11/iosfwd:39,
+                 from /usr/include/c++/11/ios:38,
+                 from /usr/include/c++/11/ostream:38,
+                 from /usr/include/c++/11/iostream:39,
+                 from student.cpp:1:
+/usr/include/c++/11/bits/stringfwd.h:79:33: note:   ‘std::string’
+   79 |   typedef basic_string<char>    string;
+      |                                 ^~~~~~
+In file included from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/ostream:38,
+                 from /usr/include/c++/11/iostream:39,
+                 from student.cpp:1:
+/usr/include/c++/11/string:67:11: note:   ‘std::pmr::string’
+   67 |     using string    = basic_string<char>;
+      |           ^~~~~~
+</pre>
+<p>コンパイラのエラーは，たいていわかりにくい．そのため，プログラムが書ける人も，コンパイラのエラーを読むのは渋々，という人が多い．渋々読まなければならない時には，コンパイラのエラーを全て理解しようとするのではなく，一番最初のエラーだけ確認すれば，まずはOK．この例における一番最初のエラーとは，以下の箇所である．</p>
+<pre>
+student.cpp: In function ‘int main()’:
+student.cpp:6:5: error: ‘string’ was not declared in this scope
+    6 |     string s {"hello"};
+      |     ^~~~~~
+</pre>
+<p>この例では，メイン関数の中において <code>In function ‘int main()’</code>，6行目の5文字目 <code>6:5</code> にエラーがあることを示している．具体的なエラーは <code>‘string’ was not declared in this scope</code> と書かれているが，この辺りは参考程度にしたうえで，自身が書いたソースコードを見直していくとよい．<strong>コンパイラはあくまで構文のエラーを示すだけであって，どう直せば動く，とは教えてくれない</strong>ことに注意．</p>
 <h1 id="%E7%AC%AC2%E5%9B%9E">第2回</h1>
 <h2 id="%E3%82%A4%E3%83%B3%E3%83%87%E3%83%B3%E3%83%88">インデント</h2>
 <p><strong>インデント</strong>：行頭に書いておく，連続したスペースのこと．字下げ．</p>
@@ -472,10 +575,12 @@ code {
 
     <span class="hljs-comment">// 良くありがちなミス</span>
     <span class="hljs-comment">// std::cin &lt;&lt; x &lt;&lt; y &lt;&lt; z;</span>
-    <span class="hljs-comment">// std::cin &gt;&gt; x, y, z;    </span>
+    <span class="hljs-comment">// std::cin &gt;&gt; x, y, z;</span>
+    <span class="hljs-comment">// std::cin &gt;&gt; x &gt;&gt; y &gt;&gt; x &gt;&gt; "\n";</span>
 }
 </div></code></pre>
 <p><code>std::cin</code>に続く演算子の向き <code>&gt;&gt;</code> と，変数ごとに <code>&gt;&gt;</code> で区切ることに注意．</p>
+<p>また，<code>cin</code> での入力後に．画面に改行を表示したい場合は，<code>cin &gt;&gt; \n;</code> とするのではなく，<code>cin</code> の次の行で，<code>cout &lt;&lt; &quot;\n&quot;;</code> とする必要がある．</p>
 <h2 id="%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E3%81%AB%E8%A4%87%E6%95%B0%E5%80%8B%E3%81%AE%E5%80%A4%E3%82%92%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E5%85%A5%E5%8A%9B%E3%81%99%E3%82%8B%E3%81%A8%E3%81%8D%E3%81%AE%E3%82%84%E3%82%8A%E6%96%B9">作成したプログラムに，複数個の値をキーボード入力するときのやり方</h2>
 <p>キーボードのスペースを入力するか，エンターキーを入力して，複数個の値を区切ればOK（値はホワイトスペースで区切って入力する）．</p>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
