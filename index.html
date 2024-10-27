@@ -364,9 +364,110 @@ code {
 <link rel="stylesheet" href="style.css">
 <h1 id="%E5%AE%9F%E9%A8%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%81%9F%E3%82%82%E3%82%8D%E3%82%82%E3%82%8D">実験で見つけたもろもろ</h1>
 <ul>
+<li><a href="#%E7%AC%AC5%E5%9B%9E">第5回 2024/10/25</a></li>
 <li><a href="#%E7%AC%AC3%E5%9B%9E">第3回 2024/09/27</a></li>
 <li><a href="#%E7%AC%AC2%E5%9B%9E">第2回 2024/09/27</a></li>
 </ul>
+<h1 id="%E7%AC%AC5%E5%9B%9E">第5回</h1>
+<h2 id="%E6%85%A3%E3%82%8C%E3%81%AA%E3%81%84%E6%99%82%E3%81%AE%E9%96%A2%E6%95%B0%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9">慣れない時の関数の作り方</h2>
+<p>関数の作り方がよくわからない場合は，とりあえずmain関数にベタ書きしましょう．その後，繰り返し登場する部分を関数にする，という手続きで作成するとよい．以下に例．</p>
+<div class="row"><div class="column">
+<p>とりあえずmain関数に一通り書く，そして，繰り返し登場する部分を見つける．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a { <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>};
+  
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+  
+  a.push_back( <span class="hljs-number">10</span> );
+  
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+  
+  a.clear();
+  
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div><div class="column">
+<p>繰り返し登場する部分を関数にする．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">print_vecor</span><span class="hljs-params">( <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a )</span> </span>{
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a { <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>};
+  
+  print_vecor( a );
+  
+  a.push_back( <span class="hljs-number">10</span> );
+  
+  print_vecor( a );
+  
+  a.clear();
+  
+  print_vecor( a );
+
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div></div>
+<p>実験では時間の関係上，あまり複雑なプログラムを作ってもらうことができず，一つの関数を一度しか呼ばないといった，あまり関数の意義を感じにくいような課題になりがち．このような場合では，共通点も何もありませんが，うまくやりましょう．</p>
+<h2 id="%E9%96%A2%E6%95%B0%E3%81%AE%E5%BC%95%E6%95%B0%E3%81%AE%E5%AE%9A%E7%BE%A9%E3%81%AE%E4%BB%95%E6%96%B9">関数の引数の定義の仕方</h2>
+<p>関数を定義する際には，（慣れないうちは）main関数にベタ書きしたコードを切り取って使用するとわかりやすい．この時に，引数をどのように定義するかが問題．例えば以下の例．</p>
+<div class="row"><div class="column">
+<p>とりあえずmain関数に一通り書いた．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a { <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>};
+  
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div><div class="column">
+<p>for文部分を関数にするため，main関数からコードを切り取って移動させた．</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">print_vecor</span><span class="hljs-params">( <span class="hljs-comment">/* 仮引数どうしよ */</span> )</span> </span>{
+  <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); i++ ) <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; a[i] &lt;&lt; <span class="hljs-string">" "</span>;
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+
+  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a { <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>};
+  
+  print_vecor( <span class="hljs-comment">/* 実引数どうしよ */</span> );
+
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+</div></div>
+<p>現時点での問題は以下の二点である．</p>
+<ol>
+<li><strong>実引数の問題</strong>：関数<code>print_vector</code>はmain関数から与えられる値を入力として仕事をするものにしたいが，その入力を与えられていない．</li>
+<li><strong>仮引数の問題</strong>：この状態でコンパイルしても，関数<code>print_vector</code>内で変数<code>a</code>を（定義されていない）参照しているため，コンパイルエラーになる．</li>
+</ol>
+<p>以上の二点を解決するため，仮引数と実引数を設定する．</p>
+<p>まず関数<code>print_vector</code>の実引数を設定する（<code>print_vector</code>に入力を与える）．もともとこの部分のコードでは，main関数中で宣言された変数<code>a</code>について仕事をしていた．そのため，<code>print_vector</code>にも<code>a</code>について仕事をさせたい．従って，実引数としてはmain関数中の変数<code>a</code>を指定すればよい．</p>
+<p>次に関数<code>print_vector</code>の仮引数を設定して，コンパイルエラーをつぶす．関数<code>print_vector</code>中では，未定義の変数<code>a</code>を宣言している（※この<code>a</code>はmain関数内の<code>a</code>とは別物）ため，仮引数の変数の名前は<code>a</code>で確定である．そして<code>print_vector</code>の仮引数の<code>a</code>の型は，実引数として与えた変数の型（<code>std::vector&lt;int&gt;</code>）と一致させればよい．</p>
 <h1 id="%E7%AC%AC3%E5%9B%9E">第3回</h1>
 <h2 id="%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E3%81%AE%E3%83%86%E3%82%AF%E3%83%8B%E3%83%83%E3%82%AF">デバッグのテクニック</h2>
 <p>デバッグ（プログラムのバグをなくす作業．）においてやるべきは，<strong>エラー箇所の特定</strong>と，<strong>エラー内容の特定</strong>，の二点であることがほとんど．特に長いソースコードを書くと，この二点の特定が難しくなる．</p>
@@ -432,7 +533,7 @@ code {
 }
 </div></code></pre>
 </div></div>
-<p>c++では，<code>/* */</code> で囲まれた範囲は，一括でコメントアウトできる．複数行を一括でコメントアウトしたいときに便利．</p>
+<p>c++では，<code>/* */</code>で囲まれた範囲は，一括でコメントアウトできる．複数行を一括でコメントアウトしたいときに便利．</p>
 <p>また，ソースコードを全て作成してからコンパイルするのではなく，<strong>少しずつ書き進めながら逐次コンパイルするほうが，慣れないうちは効率がよい</strong>ことがほとんど．</p>
 <h2 id="%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%81%AE%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%AE%E8%AA%AD%E3%81%BF%E6%96%B9">コンパイラのエラーの読み方</h2>
 <p>以下のようなコンパイラのエラーや，もっと長いものに遭遇した人もいるはず．</p>
@@ -468,11 +569,11 @@ student.cpp:6:5: error: ‘string’ was not declared in this scope
     6 |     string s {"hello"};
       |     ^~~~~~
 </pre>
-<p>この例では，メイン関数の中において <code>In function ‘int main()’</code>，6行目の5文字目 <code>6:5</code> にエラーがあることを示している．具体的なエラーは <code>‘string’ was not declared in this scope</code> と書かれているが，この辺りは参考程度にしたうえで，自身が書いたソースコードを見直していくとよい．<strong>コンパイラはあくまで構文のエラーを示すだけであって，どう直せば動く，とは教えてくれない</strong>ことに注意．</p>
+<p>この例では，メイン関数の中において<code>In function ‘int main()’</code>，6行目の5文字目<code>6:5</code>にエラーがあることを示している．具体的なエラーは<code>‘string’ was not declared in this scope</code>と書かれているが，この辺りは参考程度にしたうえで，自身が書いたソースコードを見直していくとよい．<strong>コンパイラはあくまで構文のエラーを示すだけであって，どう直せば動く，とは教えてくれない</strong>ことに注意．</p>
 <h1 id="%E7%AC%AC2%E5%9B%9E">第2回</h1>
 <h2 id="%E3%82%A4%E3%83%B3%E3%83%87%E3%83%B3%E3%83%88">インデント</h2>
 <p><strong>インデント</strong>：行頭に書いておく，連続したスペースのこと．字下げ．</p>
-<p>c++では，インデントは任意．中括弧開き <code>{</code> の後の行では，インデントをしておくと見やすいコードができる．そもそもc++では，連続したホワイトスペース（スペース<code> </code>, 改行<code>\n</code>, タブ文字<code>\t</code>, CR改行<code>\r</code>）は無視されてコンパイルされる．</p>
+<p>c++では，インデントは任意．中括弧開き<code>{</code>の後の行では，インデントをしておくと見やすいコードができる．そもそもc++では，連続したホワイトスペース（スペース``, 改行<code>\n</code>, タブ文字<code>\t</code>, CR改行<code>\r</code>）は無視されてコンパイルされる．</p>
 <p>pythonでは，インデントでブロック（処理のまとまり）を示すため，インデントは必須．</p>
 <p>pythonではインデントの有無によって処理が変わってしまうが，c++ではインデントがいくらあっても処理は変わらないため，インデントはいくら入れてもOK．</p>
 <div class="row"><div class="column">
@@ -546,10 +647,10 @@ student.cpp:6:5: error: ‘string’ was not declared in this scope
 <span class="hljs-string">"kuso spacing\n"</span>;
             }
 </div></code></pre>
-<h2 id="%E3%82%BB%E3%83%9F%E3%82%B3%E3%83%AD%E3%83%B3--%E3%81%A8%E3%82%B3%E3%83%AD%E3%83%B3">セミコロン <code>;</code> とコロン <code>:</code></h2>
-<p>c++では，処理の区切りのタイミングで，セミコロン <code>;</code> を使用する．<a href="#c%E3%81%AE%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%82%B9%E3%83%9A%E3%83%BC%E3%82%B9%E3%81%AE%E6%89%B1%E3%81%84">c++でのホワイトスペースの扱い</a>で示したように，c++ではかなり自由に空白や改行を挿入することができるため，セミコロン <code>;</code> を一つの区切りとしている．</p>
-<p>pythonでは，改行で処理が区切られる（ <code>()</code>を使えば，改行を挟んでも処理を継続できるが，それは例外 ）．そのため， <code>;</code> で処理を区切るc++は，pythonとは根本的に違うものだと理解しておく必要がある．</p>
-<p>また，（当然だが）pythonにおける <code>:</code> と，c++における <code>;</code> は，役割が全く異なるため，同じように使ってはいけない．例えば以下のコード．</p>
+<h2 id="%E3%82%BB%E3%83%9F%E3%82%B3%E3%83%AD%E3%83%B3%E3%81%A8%E3%82%B3%E3%83%AD%E3%83%B3">セミコロン<code>;</code>とコロン<code>:</code></h2>
+<p>c++では，処理の区切りのタイミングで，セミコロン<code>;</code>を使用する．<a href="#c%E3%81%AE%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%82%B9%E3%83%9A%E3%83%BC%E3%82%B9%E3%81%AE%E6%89%B1%E3%81%84">c++でのホワイトスペースの扱い</a>で示したように，c++ではかなり自由に空白や改行を挿入することができるため，セミコロン<code>;</code>を一つの区切りとしている．</p>
+<p>pythonでは，改行で処理が区切られる（<code>()</code>を使えば，改行を挟んでも処理を継続できるが，それは例外 ）．そのため，<code>;</code>で処理を区切るc++は，pythonとは根本的に違うものだと理解しておく必要がある．</p>
+<p>また，（当然だが）pythonにおける<code>:</code>と，c++における<code>;</code>は，役割が全く異なるため，同じように使ってはいけない．例えば以下のコード．</p>
 <div class="row"><div class="column">
 <h3 id="python">python</h3>
 <pre class="hljs"><code><div>x = <span class="hljs-number">10</span>
@@ -564,7 +665,7 @@ student.cpp:6:5: error: ‘string’ was not declared in this scope
 </div></code></pre>
 <p>※ main関数などは省略</p>
 </div></div>
-<p>pythonでの実装を基準に，コロン <code>:</code> をセミコロン <code>;</code> に変更した．c++のソースコードに着目すると，<code>x &gt;= 0</code>のため，if文の条件を満たすが，if文が直後で <code>;</code> により処理が区切られたため，<strong>何もしない処理をすることになる</strong>．さらに，インデントで惑わされやすいが，<strong>続く<code>std::cout</code>はif文に関係なく必ず実行される</strong>．これは意図した動作ではないため，気を付けること．</p>
+<p>pythonでの実装を基準に，コロン<code>:</code>をセミコロン<code>;</code>に変更した．c++のソースコードに着目すると，<code>x &gt;= 0</code>のため，if文の条件を満たすが，if文が直後で<code>;</code>により処理が区切られたため，<strong>何もしない処理をすることになる</strong>．さらに，インデントで惑わされやすいが，<strong>続く<code>std::cout</code>はif文に関係なく必ず実行される</strong>．これは意図した動作ではないため，気を付けること．</p>
 <h2 id="%E8%A4%87%E6%95%B0%E5%80%8B%E3%81%AE%E5%80%A4%E3%82%92%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E5%85%A5%E5%8A%9B%E3%81%99%E3%82%8B%E3%81%A8%E3%81%8D%E3%81%AE%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0">複数個の値をキーボード入力するときのプログラム</h2>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 
@@ -579,8 +680,8 @@ student.cpp:6:5: error: ‘string’ was not declared in this scope
     <span class="hljs-comment">// std::cin &gt;&gt; x &gt;&gt; y &gt;&gt; x &gt;&gt; "\n";</span>
 }
 </div></code></pre>
-<p><code>std::cin</code>に続く演算子の向き <code>&gt;&gt;</code> と，変数ごとに <code>&gt;&gt;</code> で区切ることに注意．</p>
-<p>また，<code>cin</code> での入力後に．画面に改行を表示したい場合は，<code>cin &gt;&gt; \n;</code> とするのではなく，<code>cin</code> の次の行で，<code>cout &lt;&lt; &quot;\n&quot;;</code> とする必要がある．</p>
+<p><code>std::cin</code>に続く演算子の向き<code>&gt;&gt;</code>と，変数ごとに<code>&gt;&gt;</code>で区切ることに注意．</p>
+<p>また，<code>cin</code>での入力後に．画面に改行を表示したい場合は，<code>cin &gt;&gt; \n;</code>とするのではなく，<code>cin</code>の次の行で，<code>cout &lt;&lt; &quot;\n&quot;;</code>とする必要がある．</p>
 <h2 id="%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E3%81%AB%E8%A4%87%E6%95%B0%E5%80%8B%E3%81%AE%E5%80%A4%E3%82%92%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E5%85%A5%E5%8A%9B%E3%81%99%E3%82%8B%E3%81%A8%E3%81%8D%E3%81%AE%E3%82%84%E3%82%8A%E6%96%B9">作成したプログラムに，複数個の値をキーボード入力するときのやり方</h2>
 <p>キーボードのスペースを入力するか，エンターキーを入力して，複数個の値を区切ればOK（値はホワイトスペースで区切って入力する）．</p>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
@@ -622,18 +723,18 @@ $ ./sample.out   # 改行で複数個の入力を区切る場合
     <span class="hljs-comment">// std::cout &lt;&lt; "x is " &lt;&lt; x &lt;&lt; ", ch is " &lt;&lt; ch &lt;&lt; \n;</span>
 }
 </div></code></pre>
-<p>改行を示す <code>\n</code> は，あくまでも文字という扱いなので，（今後勉強する）文字列型として表現する <code>&quot;\n&quot;</code> か，文字型 <code>'\n'</code> として表現する．ダブルクオーテーション <code>&quot;</code> かシングルクオーテーション <code>'</code> で括る必要がある．</p>
+<p>改行を示す<code>\n</code>は，あくまでも文字という扱いなので，（今後勉強する）文字列型として表現する<code>&quot;\n&quot;</code>か，文字型<code>'\n'</code>として表現する．ダブルクオーテーション<code>&quot;</code>かシングルクオーテーション<code>'</code>で括る必要がある．</p>
 <h2 id="%E8%AA%B2%E9%A1%8C%E9%96%A2%E4%BF%82%E3%81%A9%E3%81%93%E3%81%BE%E3%81%A7%E3%81%8C%E6%96%87%E5%AD%97%E5%88%97%E3%81%8B%E3%81%AE%E5%88%A4%E6%96%AD%E3%82%92%E3%81%99%E3%82%8B">課題関係：どこまでが文字列かの判断をする</h2>
-<p><strong>文字列</strong>：ダブルクオーテーション <code>&quot;</code> で括られた値．</p>
+<p><strong>文字列</strong>：ダブルクオーテーション<code>&quot;</code>で括られた値．</p>
 <p>以下は，ある課題の実行結果とする．<strong>下線部は入力</strong>である，という記載がある場合．</p>
 <pre>
 $ ./sample.out
 Input three integers: <u>30</u> <u>50</u> <u>10</u>
 50 > 30 > 10
 </pre>
-<p>実行結果から，どこが出力かを推測すること．この例では，<code>Input three integers:</code> が出力．コロン <code>:</code> などの記号には，何となく特別な意味を見出してしまうが，これは文字列としてのコロン <code>&quot;:&quot;</code> であり，特別な意味は一切ない．</p>
-<p><code>50 &gt; 30 &gt; 10</code> を出力する際にも，不等号 <code>&gt;</code> にはなんとなく特別な意味を見出してしまうが，これも文字列としてのコロン <code>&quot;&gt;&quot;</code> であり，特別な意味は一切ない．</p>
-<p>下線が引かれている <code>30 50 10</code> については，キーボード入力をしている最中の様子が，画面上に表示されているだけなので，これは出力ではないことに注意．以下のソースコード参照．</p>
+<p>実行結果から，どこが出力かを推測すること．この例では，<code>Input three integers:</code>が出力．コロン<code>:</code>などの記号には，何となく特別な意味を見出してしまうが，これは文字列としてのコロン<code>&quot;:&quot;</code>であり，特別な意味は一切ない．</p>
+<p><code>50 &gt; 30 &gt; 10</code>を出力する際にも，不等号<code>&gt;</code>にはなんとなく特別な意味を見出してしまうが，これも文字列としてのコロン<code>&quot;&gt;&quot;</code>であり，特別な意味は一切ない．</p>
+<p>下線が引かれている<code>30 50 10</code>については，キーボード入力をしている最中の様子が，画面上に表示されているだけなので，これは出力ではないことに注意．以下のソースコード参照．</p>
 <pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
 
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
@@ -669,7 +770,7 @@ Input three integers: 30 50 10
         <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"x is not zero."</span>;
 }
 </div></code></pre>
-<p>まるでelseが条件を持っているように見えてしまう．しかし正しい解釈は，<strong>elseに落ちたときに，式 <code>( x != 0 )</code> を実行する</strong>，である．インデントで混乱させられるが，<code>std::cout &lt;&lt; &quot;x is not zero.&quot;;</code>はif else文に関係なく，必ず実行される．つまり，<code>x == 0</code>のときの出力は，<code>x is zero.x is not zero.</code>である．</p>
+<p>まるでelseが条件を持っているように見えてしまう．しかし正しい解釈は，<strong>elseに落ちたときに，式<code>( x != 0 )</code>を実行する</strong>，である．インデントで混乱させられるが，<code>std::cout &lt;&lt; &quot;x is not zero.&quot;;</code>はif else文に関係なく，必ず実行される．つまり，<code>x == 0</code>のときの出力は，<code>x is zero.x is not zero.</code>である．</p>
 
 </body>
 </html>
