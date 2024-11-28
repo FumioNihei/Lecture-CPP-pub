@@ -364,10 +364,152 @@ code {
 <link rel="stylesheet" href="style.css">
 <h1 id="%E5%AE%9F%E9%A8%93%E3%81%A7%E8%A6%8B%E3%81%A4%E3%81%91%E3%81%9F%E3%82%82%E3%82%8D%E3%82%82%E3%82%8D">実験で見つけたもろもろ</h1>
 <ul>
+<li><a href="#%E7%AC%AC8%E5%9B%9E">第8回 2024/10/25</a></li>
 <li><a href="#%E7%AC%AC5%E5%9B%9E">第5回 2024/10/25</a></li>
 <li><a href="#%E7%AC%AC3%E5%9B%9E">第3回 2024/09/27</a></li>
 <li><a href="#%E7%AC%AC2%E5%9B%9E">第2回 2024/09/27</a></li>
 </ul>
+<h1 id="%E7%AC%AC8%E5%9B%9E">第8回</h1>
+<h2 id="stdcin%E3%81%AE%E5%85%A5%E5%8A%9B%E6%99%82%E3%81%AE%E6%8C%99%E5%8B%95"><code>std::cin</code>の入力時の挙動</h2>
+<p><strong>これは教科書に書いていないので，テスト範囲外だと思われます．興味があれば読んでください．</strong></p>
+<p>実験で（突如）登場した以下のコードは，うまく動作する．</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">std</span>::<span class="hljs-built_in">istringstream</span> iss { <span class="hljs-string">"0:10:20"</span> };
+     
+<span class="hljs-keyword">int</span> x, y, z;
+<span class="hljs-keyword">char</span> a, b;
+iss &gt;&gt; x &gt;&gt; a &gt;&gt; y &gt;&gt; b &gt;&gt; z;
+<span class="hljs-built_in">cout</span> &lt;&lt; x &lt;&lt; <span class="hljs-string">", "</span> &lt;&lt; y &lt;&lt; <span class="hljs-string">", "</span> &lt;&lt; z &lt;&lt; <span class="hljs-string">"\n"</span>; <span class="hljs-comment">// 0, 10, 20</span>
+<span class="hljs-built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="hljs-string">", "</span> &lt;&lt; b &lt;&lt; <span class="hljs-string">"\n"</span>;              <span class="hljs-comment">// :, :</span>
+</div></code></pre>
+<p><strong>入力は空白区切りでないのに，なぜ複数の値を変数に格納できるのか？</strong></p>
+<p>授業ではこの使い方についての説明はない（教科書にも乗っていない）．教科書で説明がないのは，初学者にとっては複雑な話なので，割愛されたと思われる．</p>
+<p><code>std::cin</code>は，以下のフローで動作する様子．</p>
+<ol>
+<li>入力バッファから次の1文字を先読みする（※<code>std::cin</code>は文字ごとに処理．文字列ではない．）</li>
+<li>先読みした値が格納先の型に適合する場合，値を読み取り続ける</li>
+<li>先読みした値が「ホワイトスペースの場合」 or 先読みした値が「格納先の型に適合しない場合」
+<ul>
+<li>ホワイトスペースの場合：
+<ul>
+<li>ホワイトスペースを区切り文字として扱い，それまでに読み取った値を変数にキャストして格納する</li>
+</ul>
+</li>
+<li>格納先の型に適合しない場合：
+<ul>
+<li>格納可能なデータが既に存在すれば，それを変数にキャストして格納し，読み取りを終了する</li>
+<li>適合するデータが1つも存在しない場合，ストリームの状態を失敗に設定する</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>一番シンプルな例として，入力<code>12 45</code>を，整数型の変数二つに格納するときを考える．</p>
+<pre class="hljs"><code><div>int x, y;
+std::cin &gt;&gt; x &gt;&gt; y; // 【12 45】を入力
+
+先読み -&gt; 1
+1はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 2
+2はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; ' '（半角スペース）
+先読みした値がホワイトスペースなので，これまでの値 12 をキャストして変数 x に格納
+
+先読み -&gt; 4
+4はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 5
+5はintに変換可能なので，値の読み取りを続ける
+
+結果，x には 12 が格納され，y には 45 が格納される．
+</div></code></pre>
+<p>異なる型をスペース区切りで入力する例として，入力<code>12 # 45</code>を，整数型変数，文字型変数，整数型変数に格納するときを考える．</p>
+<pre class="hljs"><code><div>int x, y;
+char c;
+std::cin &gt;&gt; x &gt;&gt; c &gt;&gt; y; // 【12 # 45】を入力
+
+先読み -&gt; 1
+1はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 2
+2はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; ' '（半角スペース）
+先読みした値がホワイトスペースなので，これまでの値 12 をキャストして変数 x に格納
+
+先読み -&gt; #
+#はcharに変換可能なので，値の読み取りを続ける（※しかし，charは1文字しか受け付けられないので，もう一つcharを続ける場合には，もう一つchar型変数を用意する必要あり）
+
+先読み -&gt; ' '（半角スペース）
+先読みした値がホワイトスペースなので，これまでの値 # をキャストして変数 c に格納
+
+先読み -&gt; 4
+4はintに変換可能なので，値の読み取りを続ける
+
+...以下略
+</div></code></pre>
+<p>今回の実験で登場したパターンとして，入力<code>01:34:67</code>を，整数，文字型，整数，文字，整数の，それぞれの変数に格納するときを考える．</p>
+<pre class="hljs"><code><div>int x, y, z;
+char c1, c2;
+std::cin &gt;&gt; x &gt;&gt; c &gt;&gt; y; // 【01:34:67】を入力
+
+先読み -&gt; 0
+0はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 1
+1はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; ':'（半角スペース）
+先読みした値がintに変換できないため，これまでの値 12 をキャストして変数 x に格納．また : はcharに変換可能なので，値の読み取りを続ける．しかしcharは1文字しか受け付けないため，: は変数 c に格納される．
+
+先読み -&gt; 3
+3はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 4
+4はintに変換可能なので，値の読み取りを続ける
+
+...以下略
+</div></code></pre>
+<p>さらに複雑な例として，入力<code>ab12</code>を，文字列型変数，整数型変数に格納するときを考える．</p>
+<pre class="hljs"><code><div>int x;
+std::string s;
+std::cin &gt;&gt; s &gt;&gt; x; // 【ab12】を入力
+
+先読み -&gt; a
+aはstringに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; b
+bはstringに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 1
+1はstringに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 2
+2はstringに変換可能なので，値の読み取りを続ける
+
+結果，s には ab12 が格納され，x には何も格納されない．
+</div></code></pre>
+<p>文字列と整数の順序を入れ替え，入力<code>12ab</code>とするとどうか．</p>
+<pre class="hljs"><code><div>int x;
+std::string s;
+std::cin &gt;&gt; x &gt;&gt; s; // 【12ab】を入力
+
+先読み -&gt; 1
+1はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; 2
+2はintに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; a
+先読みした値aはintに変換できないので，これまでの値 12 をキャストして変数 x に格納する．aはstringに変換可能なので，値の読み取りを続ける
+
+先読み -&gt; b
+bはstringに変換可能なので，値の読み取りを続ける
+
+結果，x には 12 が格納され，s には ab が格納される．
+</div></code></pre>
+<p>上記の例からわかるように，ホワイトスペースで区切らずにデータを与える方法では，型の組み合わせにおいてはかなりの複雑さが生じる．<code>std::cin</code>の挙動を理解していれば，このあたりの複雑さもある程度理解できるが，初学者にとっては大変厳しい．</p>
 <h1 id="%E7%AC%AC5%E5%9B%9E">第5回</h1>
 <h2 id="%E6%85%A3%E3%82%8C%E3%81%AA%E3%81%84%E6%99%82%E3%81%AE%E9%96%A2%E6%95%B0%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9">慣れない時の関数の作り方</h2>
 <p>関数の作り方がよくわからない場合は，とりあえずmain関数にベタ書きしましょう．その後，繰り返し登場する部分を関数にする，という手続きで作成するとよい．以下に例．</p>
@@ -463,9 +605,9 @@ code {
 <p>現時点での問題は以下の二点である．</p>
 <ol>
 <li><strong>実引数の問題</strong>：関数<code>print_vector</code>はmain関数から与えられる値を入力として仕事をするものにしたいが，その入力を与えられていない．</li>
-<li><strong>仮引数の問題</strong>：この状態でコンパイルしても，関数<code>print_vector</code>内で変数<code>a</code>を（定義されていない）参照しているため，コンパイルエラーになる．</li>
+<li><strong>仮引数の問題</strong>：この状態でコンパイルしても，関数<code>print_vector</code>内で変数<code>a</code>（定義されていない）を参照しているため，コンパイルエラーになる．</li>
 </ol>
-<p>以上の二点を解決するため，仮引数と実引数を設定する．</p>
+<p>以上の二点を解決するため，実引数と仮引数を設定する．</p>
 <p>まず関数<code>print_vector</code>の実引数を設定する（<code>print_vector</code>に入力を与える）．もともとこの部分のコードでは，main関数中で宣言された変数<code>a</code>について仕事をしていた．そのため，<code>print_vector</code>にも<code>a</code>について仕事をさせたい．従って，実引数としてはmain関数中の変数<code>a</code>を指定すればよい．</p>
 <p>次に関数<code>print_vector</code>の仮引数を設定して，コンパイルエラーをつぶす．関数<code>print_vector</code>中では，未定義の変数<code>a</code>を宣言している（※この<code>a</code>はmain関数内の<code>a</code>とは別物）ため，仮引数の変数の名前は<code>a</code>で確定である．そして<code>print_vector</code>の仮引数の<code>a</code>の型は，実引数として与えた変数の型（<code>std::vector&lt;int&gt;</code>）と一致させればよい．</p>
 <h1 id="%E7%AC%AC3%E5%9B%9E">第3回</h1>
